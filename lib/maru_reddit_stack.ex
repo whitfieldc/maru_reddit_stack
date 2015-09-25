@@ -1,0 +1,2 @@
+defmodule MaruRedditStack do
+end
