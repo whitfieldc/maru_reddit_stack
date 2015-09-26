@@ -14,7 +14,7 @@ defmodule MaruRedditStack.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:maru]]
+    [applications: [:maru, :httpoison]]
   end
 
   # Dependencies can be Hex packages:
@@ -27,6 +27,7 @@ defmodule MaruRedditStack.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [ {:maru, "~> 0.8"} ]
+    [{:maru, "~> 0.8"},
+     {:httpoison, "~> 0.7.2"}]
   end
 end

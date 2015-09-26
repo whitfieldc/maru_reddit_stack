@@ -16,3 +16,5 @@ defmodule MaruRedditStack.API do
     "Server Error"
   end
 end
+
+"http://reddit.com/r/" <> subreddit <> ".json"
