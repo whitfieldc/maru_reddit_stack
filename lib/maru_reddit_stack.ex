@@ -5,17 +5,15 @@ defmodule MaruRedditStack.Router.Homepage do
     %{ hello: :world }
   end
 
-  get "/:route" do
-    # Plug.Conn.send_resp(conn, 200, params[:route] )
-    # HTTPoison.start
-    # resp = HTTPoison.get!("https://reddit.com/r/" <> params[:route] <> ".json", ["User-Agent": "app:com.marureddit.stack (by /u/retiredhipster)"], [follow_redirect: true])
-    # b = Poison.decode! resp.body
-    # Plug.Conn.send_resp(conn, 200, resp )
-    resp = HTTPoison.get("http://httpbin.org/get", ["User-Agent": "app:com.marureddit.stack (by /u/retiredhipster)"], [follow_redirect: true])
-    # IO.puts "hi"
-    IO.inspect resp
-    # Plug.Conn.send_resp(conn, 200, resp.body )
-    # %{ hello: resp }
+  namespace :w do
+    route_param :route do
+      desc "get a subreddit by name"
+      get do
+        resp = Walmart.get!(params[:route]).body
+        json_item = Walmart.strip_to_one_json_item(resp)
+        Plug.Conn.send_resp(conn, 200, json_item)
+      end
+    end
   end
 end
 
@@ -30,4 +28,24 @@ defmodule MaruRedditStack.API do
   end
 end
 
-# "http://reddit.com/r/" <> subreddit <> ".json"
+defmodule Walmart do
+  use HTTPoison.Base
+
+  @expected_fields ~w(
+    items name thumbnailImage productUrl
+  )
+
+  def process_url(keyword) do
+    "http://api.walmartlabs.com/v1/search?apiKey=" <> System.get_env("WALMART_KEY") <>"&query=" <> keyword <> "&sort=price&order=asc&numItems=25"
+  end
+
+  def process_response_body(body) do
+    Poison.Parser.parse!(body)
+  end
+
+  def strip_to_one_json_item(walmart_map) do
+    walmart_map["items"]
+    |> hd
+    |> Poison.Encoder.encode([])
+  end
+end
