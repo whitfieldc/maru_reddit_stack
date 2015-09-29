@@ -1,4 +1,4 @@
-MaruRedditStack
+WalMaru
 ===============
 
-Maru Reddit Stack is a JSON api that returns a JSON document of the top post of any public subreddit
+Walmaru serves a JSON object of the top response from the Walmart API for a given route parameter, sorted by lowest price
